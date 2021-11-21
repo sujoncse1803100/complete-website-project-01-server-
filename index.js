@@ -71,43 +71,25 @@ client.connect(err => {
         const phone = req.body.phone;
         const file = req.files.file;
 
-        const filePath = `${__dirname}/doctors/${file.name}`;
-        file.mv(filePath, err => {
-            if (err) {
-                console.log(err);
-                res.status(500).send({ msg: 'failed to upload your image' });
-            }
+        const newImg = file.data;
+        const encImg = newImg.toString('base64');
 
-            const newImg = fs.readFileSync(filePath);
-            const encImg = newImg.toString('base64');
+        var image = {
+            contentType: file.mimeType,
+            size: file.size,
+            img: Buffer.from(encImg, 'base64')
+        }
+        const doctor = {
+            name: name,
+            email: email,
+            phone: phone,
+            image: image
+        }
 
-            var image = {
-                contentType: req.files.file.mimeType,
-                size: req.files.file.size,
-                img: Buffer(encImg, 'base64')
-            }
-
-            const doctor = {
-                name: name,
-                email: email,
-                phone: phone,
-                image: image
-            }
-
-            doctorsCollection.insertOne(doctor)
-                .then(result => {
-                    fs.remove(filePath, errors => {
-                        if (errors) {
-                            console.log(errors);
-                            res.status(500).send({ msg: 'failed to remove your image' });
-                        }
-                        res.send(result.acknowledged);
-                        // console.log(result);
-                    })
-
-                })
-        })
-
+        doctorsCollection.insertOne(doctor)
+            .then(result => {
+                res.send(result.acknowledged);
+            })
     })
 
     app.get('/doctors', (req, res) => {
