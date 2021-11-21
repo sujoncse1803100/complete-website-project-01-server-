@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.static('doctors'));
 app.use(fileUpload());
 
@@ -25,10 +26,10 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 client.connect(err => {
-    // const appoinmentCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_COLLECTION}`);
-    // const doctorsCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_DOCTOR_COLLECTION}`);
-    const appoinmentCollection = client.db('doctors-portal').collection('appoinments');
-    const doctorsCollection = client.db('doctors-portal').collection('doctors');
+    const appoinmentCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_COLLECTION}`);
+    const doctorsCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_DOCTOR_COLLECTION}`);
+    // const appoinmentCollection = client.db('doctors-portal').collection('appoinments');
+    // const doctorsCollection = client.db('doctors-portal').collection('doctors');
 
     app.post('/addAppoinment', (req, res) => {
         const appoinment = req.body;
@@ -93,6 +94,14 @@ client.connect(err => {
 
     app.get('/doctors', (req, res) => {
         doctorsCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            });
+
+    })
+
+    app.get('/appoinment', (req, res) => {
+        appoinmentCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             });
