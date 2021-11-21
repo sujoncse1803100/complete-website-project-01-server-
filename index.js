@@ -44,7 +44,7 @@ client.connect(err => {
             .toArray((err, doctors) => {
                 const filter = { date: date.date };
 
-                if (!doctors) {
+                if (doctors.length === 0) {
                     filter.email = email;
                 }
 
@@ -102,8 +102,8 @@ client.connect(err => {
 
         doctorsCollection.find({ email: email })
             .toArray((err, doctors) => {
-                res.send(doctors);
-                // console.log(doctors.length);
+                res.send(doctors.length > 0);
+                console.log(doctors.length);
             })
     })
 
