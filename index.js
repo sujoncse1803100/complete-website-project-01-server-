@@ -45,13 +45,12 @@ client.connect(err => {
             .toArray((err, doctors) => {
                 const filter = { date: date.date };
 
-                if (doctors.length === 0) {
+                if (!doctors.length) {
                     filter.email = email;
                 }
 
                 appoinmentCollection.find(filter)
                     .toArray((err, documents) => {
-                        // console.log(email, date.date, doctors, documents);
                         res.send(documents);
                     })
             })
@@ -61,7 +60,6 @@ client.connect(err => {
         appoinmentCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
-                // console.log(documents.length);
             })
     })
 
@@ -96,8 +94,8 @@ client.connect(err => {
         doctorsCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
-                // console.log(documents.length);
             });
+
     })
 
     app.post('/isDoctor', (req, res) => {
@@ -105,7 +103,7 @@ client.connect(err => {
 
         doctorsCollection.find({ email: email })
             .toArray((err, doctors) => {
-                res.send(doctors.length > 0);
+                res.send(doctors.length);
                 // console.log(doctors.length);
             })
     })
