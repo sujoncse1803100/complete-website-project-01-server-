@@ -33,7 +33,6 @@ client.connect(err => {
         appoinmentCollection.insertOne(appoinment)
             .then(result => {
                 res.send(result.acknowledged);
-                // console.log(result);
             })
     })
 
@@ -45,7 +44,7 @@ client.connect(err => {
             .toArray((err, doctors) => {
                 const filter = { date: date.date };
 
-                if (!doctors.length) {
+                if (!doctors) {
                     filter.email = email;
                 }
 
@@ -103,7 +102,7 @@ client.connect(err => {
 
         doctorsCollection.find({ email: email })
             .toArray((err, doctors) => {
-                res.send(doctors.length);
+                res.send(doctors);
                 // console.log(doctors.length);
             })
     })
