@@ -97,6 +97,13 @@ client.connect(err => {
 
     })
 
+    app.post('/appoinment', (req, res) => {
+        appoinmentCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            });
+    })
+
     app.post('/isDoctor', (req, res) => {
         const email = req.body.email;
 
